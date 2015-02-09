@@ -44,22 +44,22 @@ class ApplicationController < ActionController::Base
         @settings.update_attribute :reply_to_email, current_user.email
 
         # Create the Crowdtilt API Users
-        begin
-          Crowdtilt.sandbox
-          sandbox_admin = {
-            firstname: 'Crowdhoster',
-            lastname: (Rails.configuration.crowdhoster_app_name + '-admin'),
-            email: (Rails.configuration.crowdhoster_app_name + '-admin@crowdhoster.com')
-          }
-          sandbox_admin = Crowdtilt.post('/users', {user: sandbox_admin})
-        rescue => exception
-          @settings.update_attribute :initialized_flag, false
-          sign_out current_user
-          redirect_to new_user_registration_url, :flash => { :error => "An error occurred, please contact open@tilt.com: #{exception.message}" }
-          return
-        else
-          @settings.update_attribute :ct_sandbox_admin_id, sandbox_admin['user']['id']
-        end
+        # begin
+        #   Crowdtilt.sandbox
+        #   sandbox_admin = {
+        #     firstname: 'Crowdhoster',
+        #     lastname: (Rails.configuration.crowdhoster_app_name + '-admin'),
+        #     email: (Rails.configuration.crowdhoster_app_name + '-admin@crowdhoster.com')
+        #   }
+        #   sandbox_admin = Crowdtilt.post('/users', {user: sandbox_admin})
+        # rescue => exception
+        #   @settings.update_attribute :initialized_flag, false
+        #   sign_out current_user
+        #   redirect_to new_user_registration_url, :flash => { :error => "An error occurred, please contact open@tilt.com: #{exception.message}" }
+        #   return
+        # else
+        #   @settings.update_attribute :ct_sandbox_admin_id, sandbox_admin['user']['id']
+        # end
 
 
         # Put user back on admin area

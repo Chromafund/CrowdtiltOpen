@@ -7,7 +7,7 @@ gem 'pg'
 gem 'unicorn'
 gem 'foreman'
 
-gem 'crowdtilt', github: 'Crowdtilt/crowdtilt-gem'
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'devise', '~> 3.2.0'
 gem 'nokogiri'
 gem 'friendly_id', '~> 4.0.9'
@@ -38,6 +38,12 @@ end
 
 group :development, :test do
   gem 'pry-rails'
+  gem 'pry-nav'
+  gem 'pry-stack_explorer'
+  gem 'pry-debugger'
+  gem 'pry-rescue'
+  gem 'pry-remote', :require => "pry-remote"
+  gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'shoulda'

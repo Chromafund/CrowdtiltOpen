@@ -1,6 +1,6 @@
 class Payment < ActiveRecord::Base
   attr_accessible :ct_payment_id, :status, :amount, :user_fee_amount, :admin_fee_amount, :fullname, :email,
-                  :card_type, :card_last_four, :card_expiration_month, :card_expiration_year, :billing_postal_code,
+                  # :card_type, :card_last_four, :card_expiration_month, :card_expiration_year, :billing_postal_code,
                   :address_one, :address_two, :city, :state, :postal_code, :country, :quantity,
                   :additional_info, :client_timestamp,
                   :ct_charge_request_id, :ct_charge_request_error_id,
@@ -19,7 +19,7 @@ class Payment < ActiveRecord::Base
   def self.to_csv(options={})
     #db_columns = %w{fullname email quantity amount user_fee_amount created_at status ct_payment_id}
     csv_columns = ['Name', 'Email', 'Quantity', 'Amount', 'User Fee', 'Date', 'Reward',
-                   'Card Type', 'Card Last Four', 'Card Expiration Month', 'Card Expiration Year', 'Billing Postal Code',
+                  #  'Card Type', 'Card Last Four', 'Card Expiration Month', 'Card Expiration Year', 'Billing Postal Code',
                    'Address One', 'Address Two', 'City', 'State', 'Postal Code', 'Country',
                    'Additional Info','Status', 'ID']
 
@@ -34,11 +34,11 @@ class Payment < ActiveRecord::Base
                 display_dollars(payment.user_fee_amount),
                 display_date(payment.created_at),
                 reward,
-                payment.card_type,
-                payment.card_last_four,
-                payment.card_expiration_month,
-                payment.card_expiration_year,
-                payment.billing_postal_code,
+                # payment.card_type,
+                # payment.card_last_four,
+                # payment.card_expiration_month,
+                # payment.card_expiration_year,
+                # payment.billing_postal_code,
                 payment.address_one,
                 payment.address_two,
                 payment.city,
@@ -58,15 +58,15 @@ class Payment < ActiveRecord::Base
     self.amount = payment['amount']
     self.user_fee_amount = payment['user_fee_amount']
     self.admin_fee_amount = payment['admin_fee_amount']
-    self.card_type = payment['card']['card_type']
-    self.card_last_four = payment['card']['last_four']
-    self.card_expiration_month = payment['card']['expiration_month']
-    self.card_expiration_year = payment['card']['expiration_year']
+    # self.card_type = payment['card']['card_type']
+    # self.card_last_four = payment['card']['last_four']
+    # self.card_expiration_month = payment['card']['expiration_month']
+    # self.card_expiration_year = payment['card']['expiration_year']
   end
 
   def refund!
     self.campaign.production_flag ? Crowdtilt.production(Settings.first) : Crowdtilt.sandbox
-    Crowdtilt.post("/campaigns/#{self.campaign.ct_campaign_id}/payments/#{self.ct_payment_id}/refund")
+    # Crowdtilt.post("/campaigns/#{self.campaign.ct_campaign_id}/payments/#{self.ct_payment_id}/refund")
     self.update_attribute(:status, "refunded")
   end
 

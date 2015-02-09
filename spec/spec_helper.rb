@@ -36,4 +36,6 @@ RSpec.configure do |config|
 
   # Include Factory Girl syntax to simplify calls to factories
   config.include FactoryGirl::Syntax::Methods
+
+  config.infer_spec_type_from_file_location!
 end

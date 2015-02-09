@@ -68,6 +68,7 @@ class CampaignsController < ApplicationController
   end
 
   def checkout_process
+
     payment_params = basic_payment_info(params)
 
     ct_user_id = params[:ct_user_id]
@@ -125,7 +126,7 @@ class CampaignsController < ApplicationController
     @payment.reward = @reward if @reward
     @payment.save
 
-    # Execute the payment via the Crowdtilt API, if it fails, redirect user
+    # Execute the payment via the Stripe API, if it fails, redirect user
     begin
       payment = {
         amount: payment_params[:amount],
@@ -142,21 +143,37 @@ class CampaignsController < ApplicationController
           additional_info: payment_params[:additional_info]
         }
       }
+
+
+
       @campaign.production_flag ? Crowdtilt.production(@settings) : Crowdtilt.sandbox
 
-      logger.info "CROWDTILT API REQUEST: /campaigns/#{@campaign.ct_campaign_id}/payments"
+      # logger.info "CROWDTILT API REQUEST: /campaigns/#{@campaign.ct_campaign_id}/payments"
       logger.info payment
-      response = Crowdtilt.post('/campaigns/' + @campaign.ct_campaign_id + '/payments', {payment: payment})
-      logger.info "CROWDTILT API RESPONSE:"
-      logger.info response
-    rescue Crowdtilt::ApiError => api_error
-      response = api_error.response
-      logger.error "API ERROR WITH POST TO /payments: #{response[:status]} #{response[:body]}"
-      error_attributes = {status: 'error'}
-      error_attributes[:ct_charge_request_id] = response[:body]['request_id'] if response[:body]['request_id']
-      error_attributes[:ct_charge_request_error_id] = response[:body]['error_id'] if response[:body]['error_id']
-      @payment.update_attributes(error_attributes)
-      redirect_to checkout_amount_url(@campaign), flash: { error: "There was an error processing your payment. Please try again or contact support by emailing open@tilt.com" } and return
+      # response = Crowdtilt.post('/campaigns/' + @campaign.ct_campaign_id + '/payments', {payment: payment})
+
+      customer = Stripe::Customer.create(
+        :email => payment_params[:email],
+        :card  => params[:stripeToken]
+      )
+
+      charge = Stripe::Charge.create(
+        :customer    => ct_user_id
+        :amount      => @amount,
+        :description => 'Rails Stripe customer',
+        :currency    => 'usd'
+      )
+
+      # logger.info "CROWDTILT API RESPONSE:"
+      # logger.info response
+    # rescue Crowdtilt::ApiError => api_error
+    #   response = api_error.response
+    #   logger.error "API ERROR WITH POST TO /payments: #{response[:status]} #{response[:body]}"
+    #   error_attributes = {status: 'error'}
+    #   error_attributes[:ct_charge_request_id] = response[:body]['request_id'] if response[:body]['request_id']
+    #   error_attributes[:ct_charge_request_error_id] = response[:body]['error_id'] if response[:body]['error_id']
+    #   @payment.update_attributes(error_attributes)
+    #   redirect_to checkout_amount_url(@campaign), flash: { error: "There was an error processing your payment. Please try again or contact support by emailing open@tilt.com" } and return
     rescue StandardError => exception
       @payment.update_attributes({status: 'error'})
       logger.error "ERROR WITH POST TO /payments: #{exception.message}"
@@ -173,10 +190,10 @@ class CampaignsController < ApplicationController
     @campaign.save
 
     # Send confirmation emails
-    UserMailer.payment_confirmation(@payment, @campaign).deliver rescue 
+    UserMailer.payment_confirmation(@payment, @campaign).deliver rescue
       logger.info "ERROR WITH EMAIL RECEIPT: #{$!.message}"
 
-    AdminMailer.payment_notification(@payment.id).deliver rescue 
+    AdminMailer.payment_notification(@payment.id).deliver rescue
       logger.info "ERROR WITH ADMIN NOTIFICATION EMAIL: #{$!.message}"
 
     redirect_to checkout_confirmation_url(@campaign), :status => 303, :flash => { payment_guid: @payment.ct_payment_id }

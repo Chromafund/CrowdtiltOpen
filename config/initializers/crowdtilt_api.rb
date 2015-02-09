@@ -1,15 +1,37 @@
 module Crowdtilt
 
+  class << self
+
+    attr_accessor :mode, :version
+
+    def configure(params)
+
+      @version = 'v1'
+
+      if params[:mode] == 'production'
+        @mode = 'production'
+      else
+        @mode = 'sandbox'
+      end
+
+      @base_url = params[:base_url] if params[:base_url]
+      @version = params[:version] if params[:version]
+
+      true
+    end
+
+  end
+
+end
+
+module Crowdtilt
+
   def self.sandbox
-    self.configure api_key: Rails.configuration.crowdtilt_sandbox_key,
-                   api_secret: Rails.configuration.crowdtilt_sandbox_secret,
-                   mode: 'sandbox'
+    self.configure mode: 'sandbox'
   end
 
   def self.production(settings)
-    self.configure api_key: settings.ct_prod_api_key,
-                      api_secret: settings.ct_prod_api_secret,
-                      mode: 'production'
+    self.configure mode: 'production'
   end
 
 end

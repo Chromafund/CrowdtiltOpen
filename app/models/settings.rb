@@ -27,31 +27,30 @@ class Settings < ActiveRecord::Base
   end
 
   def activate_payments(key, secret)
-      Crowdtilt.configure api_key: key,
-                                  api_secret: secret,
-                                  mode: 'production'
-      begin
-        Crowdtilt.get('users')
-      rescue => exception
-        return false
-      else
-        self.ct_prod_api_key = key
-        self.ct_prod_api_secret = secret
-        begin
-          Crowdtilt.production(self)
-          production_admin = {
-            firstname: 'Crowdhoster',
-            lastname: (Rails.configuration.crowdhoster_app_name + '-admin'),
-            email: (Rails.configuration.crowdhoster_app_name + '-admin@crowdhoster.com')
-          }
-          production_admin = Crowdtilt.post('/users', {user: production_admin})
-        rescue => exception
-          return false
-        else
-          self.ct_production_admin_id = production_admin['user']['id']
-          self.save
-        end
-      end
+      Crowdtilt.configure mode: 'production'
+
+      # begin
+      #   Crowdtilt.get('users')
+      # rescue => exception
+      #   return false
+      # else
+      #   self.ct_prod_api_key = key
+      #   self.ct_prod_api_secret = secret
+      #   begin
+      #     Crowdtilt.production(self)
+      #     production_admin = {
+      #       firstname: 'Crowdhoster',
+      #       lastname: (Rails.configuration.crowdhoster_app_name + '-admin'),
+      #       email: (Rails.configuration.crowdhoster_app_name + '-admin@crowdhoster.com')
+      #     }
+      #     production_admin = Crowdtilt.post('/users', {user: production_admin})
+      #   rescue => exception
+      #     return false
+      #   else
+      #     self.ct_production_admin_id = production_admin['user']['id']
+      #     self.save
+      #   end
+      # end
   end
 
   def payments_activated?

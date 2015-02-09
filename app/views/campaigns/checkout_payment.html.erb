@@ -14,8 +14,6 @@
           <label for="fullname">Full Name</label>
           <input id="fullname" name="fullname" type="text">
 
-          <label for="email">Email Address</label>
-          <input id="email" name="email" type="text">
 
           <% if @campaign.collect_additional_info %>
           <h4>Additional Information</h4>
@@ -64,67 +62,6 @@
             </div>
           </fieldset>
           <% end %>
-
-          <h4>Credit/Debit Card <i class="icon icon-lock show_tooltip" data-placement="top" data-title="Payments are encrypted"></i></h4>
-
-          <fieldset>
-            <div class="clearfix">
-              <div class="card_number pull-left" style="margin-right:15px">
-                <label for="card_number">Card Number</label>
-                <input class="javascript-only" name="card_number" id="card_number" type="text" style="width:225px" autocomplete="off">
-                <noscript><input name="card_number" id="card_number" type="text" style="width:225px" autocomplete="off" disabled></noscript>
-              </div>
-              <div class="pull-left">
-                <label>Expiration</label>
-                <select class="javascript-only" id="expiration_month" style="width:118px">
-                <noscript></select><select id="expiration_month" style="width:118px" disabled></noscript>
-                  <option value="01" selected>01</option>
-                  <option value="02">02</option>
-                  <option value="03">03</option>
-                  <option value="04">04</option>
-                  <option value="05">05</option>
-                  <option value="06">06</option>
-                  <option value="07">07</option>
-                  <option value="08">08</option>
-                  <option value="09">09</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select>
-                <select class="javascript-only" id="expiration_year" style="width:118px">
-                <noscript></select><select id="expiration_year" style="width:118px" disabled></noscript>
-                  <option value="2014" selected>2014</option>
-                  <option value="2015">2015</option>
-                  <option value="2016">2016</option>
-                  <option value="2017">2017</option>
-                  <option value="2018">2018</option>
-                  <option value="2019">2019</option>
-                  <option value="2020">2020</option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                </select>
-              </div>
-            </div>
-            </fieldset>
-            <fieldset>
-              <div class="clearfix">
-                <div class="pull-left" style="margin-right: 15px;">
-                  <label for="security_code">Security Code <i class="icon icon-question-sign show_tooltip" data-placement="top" data-title="3 or 4 digit number"></i></label>
-                  <input class="javascript-only" id="security_code" name="security_code" type="text"  style="width:225px" autocomplete="off">
-                  <noscript><input id="security_code" name="security_code" type="text"  style="width:225px" autocomplete="off" disabled></noscript>
-                </div>
-                <div class="billing_postal_code pull-left">
-                  <label for="billing_postal_code">Billing Postal Code</label>
-                  <input class="javascript-only" id="billing_postal_code" name="billing_postal_code" type="text"  style="width:225px">
-                  <noscript><input id="billing_postal_code" name="billing_postal_code" type="text"  style="width:225px" disabled></noscript>
-                </div>
-              </div>
-            </fieldset>
-          <label for="card_number" class="error" style="display: none"></label>
-          <label for="security_code" class="error" style="display: none"></label>
-          <label for="billing_postal_code" class="error" style="display: none"></label>
-
           <input id="ct_user_id" type="hidden" name="ct_user_id" value="">
 
           <input id="quantity" type="hidden" name="quantity" value="<%= @quantity %>">
@@ -138,9 +75,15 @@
           <% end%>
 
           <div class="payment-submit javascript-only">
-            <button class="btn btn-primary show_loader" type="submit" data-total="<%= number_with_precision(@total, precision: 2) %>" data-loader="payment_form">
-              Confirm payment of $<%= number_with_precision(@total, :delimiter => ",", precision: 2) %>
-            </button>
+
+            <script src="https://checkout.stripe.com/checkout.js"
+              class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-image="/square-image.png"
+              data-description="<%= @campaign.name %>"
+              data-amount="<%= (@total * 100).to_i %>">
+            </script>
+
             <span class="loader" data-loader="payment_form" style="display:none"></span>
             <div id="refresh-msg" style="display: none; color: red; margin-top: 10px">Your payment is being processed! Please do not refresh this page.</div>
           </div>

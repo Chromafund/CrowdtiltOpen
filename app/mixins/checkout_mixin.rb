@@ -17,8 +17,8 @@ module CheckoutMixin
         client_timestamp: params.has_key?(:client_timestamp) ? params[:client_timestamp].to_i : nil,
         ct_tokenize_request_id: params[:ct_tokenize_request_id],
         fullname: params[:fullname],
-        email: params[:email],
-        billing_postal_code: params[:billing_postal_code],
+        email: params[:stripeEmail],
+        # billing_postal_code: params[:billing_postal_code],
         quantity: params[:quantity].to_i,
 
         #Shipping Info

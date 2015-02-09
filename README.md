@@ -2,6 +2,9 @@
 
 Launch your own advanced crowdfunding page.
 
+**Stripe**
+This fork replaces the CrowdtiltOpen payment system in favor of Stripe. As such, you must configure the Stripe Checkout. After signing up for a Stripe account, from the "API Keys" section of the account settings, you will find 2 sets of API keys. Add these as the variables, `STRIPE_PUBLISHABLE_KEY` and 'STRIPE_SECRET_KEY', to your env file, if you are running a local instance, or else to Heroku's configuration.
+
 ---
 **Demo**
 

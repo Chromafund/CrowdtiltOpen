@@ -40,11 +40,11 @@ Crowdhoster::Application.routes.draw do
   match '/:id/ajax/create_payment_user',        to: 'campaigns#ajax_create_payment_user',    as: :ajax_create_payment_user
 
 
-  namespace :api, defaults: {format: 'json'} do
-    scope module: :v0  do
-      resources :campaigns, only: :show do
-        resources :payments, only: :index
-      end
-    end
-  end
+  # namespace :api, defaults: {format: 'json'} do
+  #   scope module: :v0  do
+  #     resources :campaigns, only: :show do
+  #       resources :payments, only: :index
+  #     end
+  #   end
+  # end
 end
