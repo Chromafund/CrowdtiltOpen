@@ -1,13 +1,3 @@
-GIT
-  remote: git://github.com/Crowdtilt/crowdtilt-gem.git
-  revision: fc5185478a33fc9a5447b0ff382fbd0823fce1be
-  specs:
-    crowdtilt (1.0.1)
-      activesupport
-      faraday (~> 0.8.8)
-      faraday_middleware (~> 0.9.0)
-      json
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -96,10 +86,6 @@ GEM
       railties (>= 3.0.0)
     faker (1.2.0)
       i18n (~> 0.5)
-    faraday (0.8.9)
-      multipart-post (~> 1.2.0)
-    faraday_middleware (0.9.0)
-      faraday (>= 0.7.4, < 0.9)
     fog (1.11.1)
       builder
       excon (~> 0.20)
@@ -141,7 +127,6 @@ GEM
     momentjs-rails (2.5.0)
       railties (>= 3.1)
     multi_json (1.7.6)
-    multipart-post (1.2.0)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.6.7)
@@ -251,7 +236,6 @@ DEPENDENCIES
   capybara
   ckeditor
   coffee-rails (~> 3.2.1)
-  crowdtilt!
   devise (~> 3.2.0)
   email_spec
   factory_girl_rails

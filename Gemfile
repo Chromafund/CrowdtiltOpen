@@ -7,7 +7,6 @@ gem 'pg'
 gem 'unicorn'
 gem 'foreman'
 
-gem 'crowdtilt', github: 'Crowdtilt/crowdtilt-gem'
 gem 'devise', '~> 3.2.0'
 gem 'nokogiri'
 gem 'friendly_id', '~> 4.0.9'
