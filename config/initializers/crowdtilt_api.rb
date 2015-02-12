@@ -98,6 +98,30 @@ module Crowdtilt
     #   end
     # end
 
+    def createBankGivenAUser(user_id,bankHash)
+    end
+
+    def getBankGivenAUser(user_id)
+    end
+
+    def deleteBankGivenAUser(user_id, bank_id)
+    end
+
+    def getUser(user_id)
+    end
+
+    def verifyUser(user_id)
+    end
+
+    def updateUser(user_hash)
+    end
+
+    def refundPaymentGivenACampaign(campaign_id, payment_id)
+    end
+
+    def getUsers
+    end
+    
   end
 
 end

@@ -31,7 +31,7 @@ class Settings < ActiveRecord::Base
                                   api_secret: secret,
                                   mode: 'production'
       begin
-        Crowdtilt.get('users')
+        Crowdtilt.getUsers
       rescue => exception
         return false
       else

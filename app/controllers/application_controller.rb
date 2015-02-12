@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
             lastname: (Rails.configuration.crowdhoster_app_name + '-admin'),
             email: (Rails.configuration.crowdhoster_app_name + '-admin@crowdhoster.com')
           }
-          sandbox_admin = Crowdtilt.post('/users', {user: sandbox_admin})
+          sandbox_admin = Crowdtilt.updateUser(sandbox_admin)
         rescue => exception
           @settings.update_attribute :initialized_flag, false
           sign_out current_user

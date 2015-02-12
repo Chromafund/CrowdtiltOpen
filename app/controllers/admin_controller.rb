@@ -65,7 +65,7 @@ class AdminController < ApplicationController
         bank = {
           id: params[:ct_bank_id]
         }
-        Crowdtilt.post('/users/' + @ct_admin_id + '/banks/default', {bank: bank})
+        Crowdtilt.createBankGivenAUser(@ct_admin_id, bank)
       rescue => exception
         flash = { :error => "An error occurred, please contact open@tilt.com: #{exception.message}" }
       else
@@ -81,7 +81,7 @@ class AdminController < ApplicationController
     end
     @bank = {}
     begin
-      response = Crowdtilt.get('/users/' + @ct_admin_id + '/banks/default')
+      response = Crowdtilt.getBankGivenAUser(@ct_admin_id)
     rescue => exception # response threw an error, default bank may not be set up
       # do nothing
     else # response is good, check for default bank
@@ -96,12 +96,12 @@ class AdminController < ApplicationController
 
   def delete_admin_bank_account
     begin
-      response = Crowdtilt.get('/users/' + @ct_admin_id + '/banks/default')
+      response = Crowdtilt.getBankGivenAUser(@ct_admin_id)
     rescue => exception
         flash = { :warning => "No default bank account" }
     else
       begin
-        Crowdtilt.delete('/users/' + @ct_admin_id + '/banks/' + response['bank']['id'])
+        Crowdtilt.deleteBankGivenAUser(@ct_admin_id, response['bank']['id'])
       rescue => exception
         flash = { :error => "An error occurred, please contact open@tilt.com: #{exception.message}" }
       else
@@ -116,7 +116,7 @@ class AdminController < ApplicationController
       render text: "error" and return #not all fields filled out
     else
       begin
-        response = Crowdtilt.get('/users/' + @ct_admin_id)
+        response = Crowdtilt.getUser(@ct_admin_id)
       rescue => exception
         render text: "error" and return #failed to verify through Crowdtilt API
       end
@@ -129,7 +129,7 @@ class AdminController < ApplicationController
             postal_code: params[:postal_code],
             dob: params[:dob]
           }
-          response = Crowdtilt.post('/users/' + @ct_admin_id + '/verification', {verification: verification})
+          response = Crowdtilt.verifyUser(@ct_admin_id, verification)
         rescue => exception
           render text: "error" #failed to verify through Crowdtilt API
         else

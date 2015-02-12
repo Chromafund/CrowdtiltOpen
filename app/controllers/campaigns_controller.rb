@@ -146,7 +146,7 @@ class CampaignsController < ApplicationController
 
       logger.info "CROWDTILT API REQUEST: /campaigns/#{@campaign.ct_campaign_id}/payments"
       logger.info payment
-      response = Crowdtilt.post('/campaigns/' + @campaign.ct_campaign_id + '/payments', {payment: payment})
+      response = Crowdtilt.createPaymentGivenACampaign(@campaign.ct_campaign_id, payment)
       logger.info "CROWDTILT API RESPONSE:"
       logger.info response
     rescue Crowdtilt::ApiError => api_error
@@ -173,10 +173,10 @@ class CampaignsController < ApplicationController
     @campaign.save
 
     # Send confirmation emails
-    UserMailer.payment_confirmation(@payment, @campaign).deliver rescue 
+    UserMailer.payment_confirmation(@payment, @campaign).deliver rescue
       logger.info "ERROR WITH EMAIL RECEIPT: #{$!.message}"
 
-    AdminMailer.payment_notification(@payment.id).deliver rescue 
+    AdminMailer.payment_notification(@payment.id).deliver rescue
       logger.info "ERROR WITH ADMIN NOTIFICATION EMAIL: #{$!.message}"
 
     redirect_to checkout_confirmation_url(@campaign), :status => 303, :flash => { payment_guid: @payment.ct_payment_id }

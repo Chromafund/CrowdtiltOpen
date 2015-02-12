@@ -30,7 +30,7 @@ class Admin::CampaignsController < ApplicationController
         billing_statement_text: @settings.billing_statement_text
       }
       Crowdtilt.sandbox
-      response = Crowdtilt.post('/campaigns', {campaign: campaign})
+      response = Crowdtilt.createCampaign(campaign)
     rescue => exception
       redirect_to admin_campaigns, :flash => { :error => "Could not copy campaign" }
     else
@@ -86,7 +86,7 @@ class Admin::CampaignsController < ApplicationController
         billing_statement_text: @settings.billing_statement_text
       }
       @campaign.production_flag ? Crowdtilt.production(@settings) : Crowdtilt.sandbox
-      response = Crowdtilt.post('/campaigns', {campaign: campaign})
+      response = Crowdtilt.createCampaign(campaign)
     rescue => exception
       flash.now[:error] = exception.to_s
       render action: "new"
@@ -239,10 +239,10 @@ class Admin::CampaignsController < ApplicationController
       if @campaign.production_flag && @campaign.production_flag_changed?
         campaign[:user_id] = ct_user_id
         Crowdtilt.production(@settings)
-        response = Crowdtilt.post('/campaigns', {campaign: campaign})
+        response = Crowdtilt.createCampaign(campaign)
       else
         @campaign.production_flag ? Crowdtilt.production(@settings) : Crowdtilt.sandbox
-        response = Crowdtilt.put('/campaigns/' + @campaign.ct_campaign_id, {campaign: campaign})
+        response = Crowdtilt.updateCampaign(@campaign.ct_campaign_id, campaign)
       end
     rescue => exception
       flash.now[:error] = exception.to_s

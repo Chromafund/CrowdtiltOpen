@@ -11,7 +11,7 @@ namespace :ch do
       puts "Synching payments for #{campaign.name} (#{ENV['CAMPAIGN_ID']})"
       campaign.production_flag ? Crowdtilt.production(Settings.first) : Crowdtilt.sandbox
       begin
-        response = Crowdtilt.get("campaigns/#{campaign.ct_campaign_id}/payments?page=1&per_page=100")
+        response = Crowdtilt.getPaymentsGivenACampaign(campaign.ct_campaign_id, {page: 1, per_page: 100})
       rescue => exception
         puts exception.message and abort
       end      
@@ -23,7 +23,7 @@ namespace :ch do
       for x in 1..pages
         if x > 1
           begin
-            response = Crowdtilt.get("campaigns/#{campaign.ct_campaign_id}/payments?page=#{x}&per_page=100")
+            response = Crowdtilt.getPaymentsGivenACampaign(campaign.ct_campaign_id, {page: x, per_page: 100})
           rescue => exception
             puts exception.message and abort
           end

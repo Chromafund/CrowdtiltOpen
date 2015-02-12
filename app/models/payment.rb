@@ -66,7 +66,7 @@ class Payment < ActiveRecord::Base
 
   def refund!
     self.campaign.production_flag ? Crowdtilt.production(Settings.first) : Crowdtilt.sandbox
-    Crowdtilt.post("/campaigns/#{self.campaign.ct_campaign_id}/payments/#{self.ct_payment_id}/refund")
+    Crowdtilt.refundPaymentGivenACampaign(self.campaign.ct_campaign_id, self.ct_payment_id)
     self.update_attribute(:status, "refunded")
   end
 
